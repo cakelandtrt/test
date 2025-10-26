@@ -327,7 +327,7 @@ export default function AdminProducts() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label>Price per Liter (₹) <span className="text-destructive">*</span></Label>
+                  <Label>Price per KG (₹) <span className="text-destructive">*</span></Label>
                   <Input 
                     type="number" 
                     step="0.01"
@@ -500,7 +500,7 @@ export default function AdminProducts() {
                   <div>
                     <h3 className="font-semibold">{product.name}</h3>
                     <p className="text-sm text-muted-foreground">
-                      ₹{product.price_per_litre}/L | Stock: {product.stock_quantity}L
+                      ₹{product.price_per_litre}/KG | Stock: {product.stock_quantity}KG
                     </p>
                     {product.product_categories && (
                       <p className="text-xs text-muted-foreground">
