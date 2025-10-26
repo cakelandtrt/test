@@ -101,7 +101,7 @@ export default function Cart() {
                         <div className="flex-1">
                           <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
                           <p className="text-muted-foreground mb-2">
-                            ₹{price.toFixed(2)} / litre
+                            ₹{price.toFixed(2)} / KG
                           </p>
                           <div className="flex items-center gap-2">
                             <Button
