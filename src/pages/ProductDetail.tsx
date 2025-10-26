@@ -197,7 +197,7 @@ export default function ProductDetail() {
                 <span className="text-4xl font-bold text-primary">
                   ₹{effectivePrice.toFixed(2)}
                 </span>
-                <span className="text-lg text-muted-foreground">/litre</span>
+                <span className="text-lg text-muted-foreground">/KG</span>
               </div>
 
               {hasDiscount && (
@@ -211,14 +211,14 @@ export default function ProductDetail() {
               <p className="text-sm mt-2">
                 <span className="font-semibold">Stock:</span>{' '}
                 {product.stock_quantity > 0
-                  ? `${product.stock_quantity} litres available`
+                  ? `${product.stock_quantity} KG available`
                   : 'Out of stock'}
               </p>
             </div>
 
             <div className="space-y-4">
               <div className="flex items-center gap-4">
-                <span className="font-semibold">Quantity (litres):</span>
+                <span className="font-semibold">Quantity (KG):</span>
                 <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
