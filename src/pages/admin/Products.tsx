@@ -338,7 +338,7 @@ export default function AdminProducts() {
                   />
                 </div>
                 <div>
-                  <Label>Offer Price per Liter (₹)</Label>
+                  <Label>Offer Price per KG (₹)</Label>
                   <Input 
                     type="number" 
                     step="0.01"
@@ -348,7 +348,7 @@ export default function AdminProducts() {
                   />
                 </div>
                 <div>
-                  <Label>Stock Quantity (Liters) <span className="text-destructive">*</span></Label>
+                  <Label>Stock Quantity (KG) <span className="text-destructive">*</span></Label>
                   <Input 
                     type="number" 
                     value={formData.stock_quantity} 
