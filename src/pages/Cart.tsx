@@ -64,6 +64,9 @@ export default function Cart() {
   });
 
   const total = cartItems?.reduce((sum, item) => {
+    if (item.custom_price) {
+      return sum + item.custom_price;
+    }
     const price = item.products?.offer_price_per_litre || item.products?.price_per_litre || 0;
     return sum + price * item.quantity_litres;
   }, 0) || 0;
@@ -87,7 +90,9 @@ export default function Cart() {
                 const product = item.products;
                 if (!product) return null;
 
+                const isCustom = !!item.custom_price;
                 const price = product.offer_price_per_litre || product.price_per_litre;
+                const itemTotal = isCustom ? item.custom_price : (price * item.quantity_litres);
 
                 return (
                   <Card key={item.id}>
@@ -100,52 +105,66 @@ export default function Cart() {
                         />
                         <div className="flex-1">
                           <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
-                          <p className="text-muted-foreground mb-2">
-                            ₹{price.toFixed(2)} / KG
-                          </p>
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() =>
-                                updateQuantityMutation.mutate({
-                                  id: item.id,
-                                  quantity: Math.max(1, item.quantity_litres - 1),
-                                })
-                              }
-                            >
-                              <Minus className="h-4 w-4" />
-                            </Button>
-                            <Input
-                              type="number"
-                              value={item.quantity_litres}
-                              onChange={(e) =>
-                                updateQuantityMutation.mutate({
-                                  id: item.id,
-                                  quantity: Math.max(1, parseFloat(e.target.value) || 1),
-                                })
-                              }
-                              className="w-20 text-center"
-                              min="1"
-                              step="0.5"
-                            />
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              onClick={() =>
-                                updateQuantityMutation.mutate({
-                                  id: item.id,
-                                  quantity: item.quantity_litres + 1,
-                                })
-                              }
-                            >
-                              <Plus className="h-4 w-4" />
-                            </Button>
-                          </div>
+                          {!isCustom && (
+                            <p className="text-muted-foreground mb-2">
+                              ₹{price.toFixed(2)} / litre
+                            </p>
+                          )}
+                          {isCustom && (
+                            <p className="text-muted-foreground mb-2 text-sm">
+                              Custom Price (includes all options)
+                            </p>
+                          )}
+                          {!isCustom && (
+                            <div className="flex items-center gap-2">
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() =>
+                                  updateQuantityMutation.mutate({
+                                    id: item.id,
+                                    quantity: Math.max(1, item.quantity_litres - 1),
+                                  })
+                                }
+                              >
+                                <Minus className="h-4 w-4" />
+                              </Button>
+                              <Input
+                                type="number"
+                                value={item.quantity_litres}
+                                onChange={(e) =>
+                                  updateQuantityMutation.mutate({
+                                    id: item.id,
+                                    quantity: Math.max(1, parseFloat(e.target.value) || 1),
+                                  })
+                                }
+                                className="w-20 text-center"
+                                min="1"
+                                step="0.5"
+                              />
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() =>
+                                  updateQuantityMutation.mutate({
+                                    id: item.id,
+                                    quantity: item.quantity_litres + 1,
+                                  })
+                                }
+                              >
+                                <Plus className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          )}
+                          {isCustom && (
+                            <p className="text-sm text-muted-foreground">
+                              Weight: {item.quantity_litres} kg
+                            </p>
+                          )}
                         </div>
                         <div className="text-right">
                           <p className="text-lg font-bold mb-2">
-                            ₹{(price * item.quantity_litres).toFixed(2)}
+                            ₹{itemTotal.toFixed(2)}
                           </p>
                           <Button
                             variant="ghost"
