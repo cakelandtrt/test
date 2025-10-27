@@ -226,10 +226,14 @@ export default function CustomizeCake() {
         .maybeSingle();
 
       if (existingCartItem) {
+        const newQuantity = existingCartItem.quantity_litres + selectedWeight;
+        const newCustomPrice = (existingCartItem.custom_price || 0) + totalPrice;
+
         const { error: updateError } = await supabase
           .from('cart_items')
           .update({
-            quantity_litres: existingCartItem.quantity_litres + selectedWeight,
+            quantity_litres: newQuantity,
+            custom_price: newCustomPrice,
             updated_at: new Date().toISOString(),
           })
           .eq('id', existingCartItem.id);
@@ -242,6 +246,7 @@ export default function CustomizeCake() {
             user_id: user.id,
             product_id: productId,
             quantity_litres: selectedWeight,
+            custom_price: totalPrice,
           });
 
         if (insertError) throw insertError;
