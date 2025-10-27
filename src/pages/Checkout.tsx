@@ -42,6 +42,9 @@ export default function Checkout() {
   });
 
   const subtotal = cartItems?.reduce((sum, item) => {
+    if (item.custom_price) {
+      return sum + item.custom_price;
+    }
     const price = item.products?.offer_price_per_litre || item.products?.price_per_litre || 0;
     return sum + price * item.quantity_litres;
   }, 0) || 0;
@@ -79,15 +82,20 @@ export default function Checkout() {
 
     if (orderError) throw orderError;
 
-    const orderItems = cartItems.map((item) => ({
-      order_id: order.id,
-      product_id: item.product_id,
-      product_name: item.products?.name || '',
-      quantity_litres: item.quantity_litres,
-      price_per_litre: item.products?.offer_price_per_litre || item.products?.price_per_litre || 0,
-      total_price:
-        (item.products?.offer_price_per_litre || item.products?.price_per_litre || 0) * item.quantity_litres,
-    }));
+    const orderItems = cartItems.map((item) => {
+      const isCustom = !!item.custom_price;
+      const pricePerLitre = item.products?.offer_price_per_litre || item.products?.price_per_litre || 0;
+      const totalPrice = isCustom ? item.custom_price : (pricePerLitre * item.quantity_litres);
+
+      return {
+        order_id: order.id,
+        product_id: item.product_id,
+        product_name: item.products?.name || '',
+        quantity_litres: item.quantity_litres,
+        price_per_litre: isCustom ? (item.custom_price / item.quantity_litres) : pricePerLitre,
+        total_price: totalPrice,
+      };
+    });
 
     const { error: itemsError } = await supabase.from('order_items').insert(orderItems);
     if (itemsError) throw itemsError;
